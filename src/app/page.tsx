@@ -1,69 +1,77 @@
-import Image from "next/image";
+import React from 'react';
+import Link from 'next/link';
+import AdminNavbar from './components/sections/AdminNavbar';
 
-export default function Home() {
+export default function AdminDashboard() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-screen bg-[#F4F1EB] text-[#2C2A25] selection:bg-[#591C27] selection:text-[#F4F1EB] flex flex-col">
+      <AdminNavbar />
+
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 w-full max-w-5xl mx-auto">
+        
+        <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl tracking-widest uppercase text-[#2C2A25] mb-16 md:mb-24 text-center">
+          Admin Console
+        </h1>
+
+        {/* 3-Column Grid for perfect centering */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 w-full">
+          
+          {/* CARD 1: THE DIARY */}
+          <Link href="/calendar" className="group bg-[#2C2A25] aspect-square flex flex-col items-center justify-center p-8 hover:-translate-y-2 transition-all duration-300 shadow-xl hover:shadow-2xl">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#F4F1EB" strokeWidth="1.5" className="mb-8 group-hover:scale-110 transition-transform duration-300 opacity-90">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <h2 className="font-sans text-sm tracking-[0.2em] uppercase font-bold text-[#F4F1EB] mb-3">
+              Calendar
+            </h2>
+            <p className="font-serif text-sm italic text-[#F4F1EB]/60 text-center">
+              Manage Bookings
+            </p>
+          </Link>
+
+          {/* CARD 2: INBOX (WITH NOTIFICATION) */}
+          <Link href="/inquiries" className="group bg-[#2C2A25] aspect-square flex flex-col items-center justify-center p-8 hover:-translate-y-2 transition-all duration-300 shadow-xl hover:shadow-2xl relative">
+            <div className="relative mb-8 group-hover:scale-110 transition-transform duration-300 opacity-90">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#F4F1EB" strokeWidth="1.5">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              
+              {/* Notification Badge with Ping Effect */}
+              <div className="absolute -top-2 -right-3">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-[#591C27] opacity-75 animate-ping"></span>
+                <span className="relative flex h-6 w-6 items-center justify-center rounded-full bg-[#591C27] text-[#F4F1EB] text-[10px] font-bold shadow-lg border border-[#2C2A25]">
+                  3
+                </span>
+              </div>
+            </div>
+            <h2 className="font-sans text-sm tracking-[0.2em] uppercase font-bold text-[#F4F1EB] mb-3">
+              Inbox
+            </h2>
+            <p className="font-serif text-sm italic text-[#C5A059] font-bold text-center">
+              3 New Inquiries
+            </p>
+          </Link>
+
+          {/* CARD 3: ACCESS */}
+          <Link href="/access" className="group bg-[#2C2A25] aspect-square flex flex-col items-center justify-center p-8 hover:-translate-y-2 transition-all duration-300 shadow-xl hover:shadow-2xl">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#F4F1EB" strokeWidth="1.5" className="mb-8 group-hover:scale-110 transition-transform duration-300 opacity-90">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <h2 className="font-sans text-sm tracking-[0.2em] uppercase font-bold text-[#F4F1EB] mb-3">
+              System Access
+            </h2>
+            <p className="font-serif text-sm italic text-[#F4F1EB]/60 text-center">
+              Manage Team Roles
+            </p>
+          </Link>
+
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
