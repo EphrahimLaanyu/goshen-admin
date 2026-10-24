@@ -12,8 +12,8 @@
   --color-background: #F4F1EB;
   --color-foreground: #2C2A25;
   --color-burgundy: #591C27;
-  --font-serif: var(--font-serif);
-  --font-sans: var(--font-sans);
+  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-sans: var(--font-jakarta), system-ui, -apple-system, sans-serif;
 }
 
 * {
@@ -33,26 +33,30 @@
 body {
   background-color: #F4F1EB;
   color: #2C2A25;
-  font-family: var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--font-jakarta, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Subtle, unobtrusive scrollbars */
+/* Subtle luxury scrollbars */
+.custom-scrollbar::-webkit-scrollbar,
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 
+.custom-scrollbar::-webkit-scrollbar-track,
 ::-webkit-scrollbar-track {
   background: #F4F1EB;
 }
 
+.custom-scrollbar::-webkit-scrollbar-thumb,
 ::-webkit-scrollbar-thumb {
   background: #D9D3C7;
   border-radius: 9999px;
 }
 
+.custom-scrollbar::-webkit-scrollbar-thumb:hover,
 ::-webkit-scrollbar-thumb:hover {
   background: #C4BCAC;
 }
