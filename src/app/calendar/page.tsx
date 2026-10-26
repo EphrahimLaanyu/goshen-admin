@@ -19,8 +19,13 @@ export default function CalendarPage() {
   const [blockForm, setBlockForm] = useState({ start: '', end: '', reason: 'Camp Maintenance' });
   const [isSubmittingBlock, setIsSubmittingBlock] = useState(false);
 
-  // Fetch bookings on mount
+  // Client-Side Date State (Fixes Vercel Build Error)
+  const [currentDate, setCurrentDate] = useState<Date | null>(null);
+
+  // Fetch bookings on mount & initialize date
   useEffect(() => {
+    setCurrentDate(new Date());
+
     async function fetchBookings() {
       setIsLoading(true);
       const { data, error } = await supabase
@@ -78,7 +83,6 @@ export default function CalendarPage() {
     if (error) {
       alert("Failed to block dates.");
     } else if (data) {
-      // Add to UI and sort by date
       const updatedBookings = [...bookings, data[0]].sort((a, b) => 
         new Date(a.arrival_date).getTime() - new Date(b.arrival_date).getTime()
       );
@@ -89,13 +93,13 @@ export default function CalendarPage() {
     setIsSubmittingBlock(false);
   };
 
-  // Date Logic
-  const now = new Date();
-  const currentMonthName = now.toLocaleString('default', { month: 'long' });
+  // Safe Date Logic (Only calculates if currentDate exists)
+  const currentMonthName = currentDate ? currentDate.toLocaleString('default', { month: 'long' }) : '';
   
   const currentMonthBookings = bookings.filter(b => {
+    if (!currentDate) return false;
     const arrival = new Date(b.arrival_date);
-    return arrival.getMonth() === now.getMonth() && arrival.getFullYear() === now.getFullYear();
+    return arrival.getMonth() === currentDate.getMonth() && arrival.getFullYear() === currentDate.getFullYear();
   });
 
   const feedBookings = feedFilter === 'All' 
@@ -108,7 +112,6 @@ export default function CalendarPage() {
 
       <div className="flex-1 w-full max-w-[1400px] mx-auto flex flex-col">
         
-        {/* Header */}
         <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 px-6 md:px-12 py-10">
           <div>
             <div className="flex items-center gap-4 mb-4">
@@ -140,7 +143,7 @@ export default function CalendarPage() {
         </header>
 
         {/* Loading State */}
-        {isLoading && (
+        {(isLoading || !currentDate) && (
           <div className="flex-1 flex items-center justify-center py-32 border-t border-[#2C2A25]/15">
             <p className="font-sans text-[10px] tracking-[0.2em] uppercase font-bold text-[#2C2A25]/40 animate-pulse">
               Syncing Ledger...
@@ -148,10 +151,10 @@ export default function CalendarPage() {
           </div>
         )}
 
-        {!isLoading && (
+        {(!isLoading && currentDate) && (
           <div className="flex flex-col lg:flex-row flex-1 border-t-2 border-[#2C2A25]/15">
             
-            {/* ============================== LEFT HALF: THIS MONTH ============================== */}
+            {/* LEFT HALF */}
             <div className="w-full lg:w-[55%] xl:w-[60%] px-6 md:px-12 py-10 flex flex-col gap-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-serif text-3xl text-[#2C2A25]">{currentMonthName} Itinerary</h2>
@@ -205,9 +208,8 @@ export default function CalendarPage() {
               )}
             </div>
 
-            {/* ============================== RIGHT HALF: AIRBNB-STYLE FEED ============================== */}
+            {/* RIGHT HALF */}
             <div className="w-full lg:w-[45%] xl:w-[40%] bg-[#2C2A25]/[0.03] border-t-2 lg:border-t-0 lg:border-l-2 border-[#2C2A25]/15 h-[800px] flex flex-col shadow-[inset_10px_0_20px_-15px_rgba(0,0,0,0.05)]">
-              
               <div className="flex items-center justify-between px-8 py-8 border-b border-[#2C2A25]/10 bg-[#2C2A25]/[0.02]">
                 <h2 className="font-serif text-2xl text-[#2C2A25]">Feed</h2>
                 <div className="flex gap-2 font-sans text-[10px] tracking-[0.2em] uppercase font-bold bg-[#F4F1EB] p-1 rounded-full border border-[#2C2A25]/15">
@@ -244,7 +246,6 @@ export default function CalendarPage() {
                           onClick={() => setSelectedBooking(booking)}
                           className={`flex items-start gap-4 p-5 rounded-2xl cursor-pointer transition-all ${isUnread ? 'bg-white shadow-md border border-[#2C2A25]/10 hover:border-[#591C27]/50 hover:-translate-y-0.5' : isBlocked ? 'bg-[#2C2A25]/5 border border-transparent hover:border-[#2C2A25]/20 opacity-80' : 'bg-transparent border border-transparent hover:bg-[#2C2A25]/5 hover:border-[#2C2A25]/10'}`}
                         >
-                          {/* Avatar */}
                           <div className="relative flex-shrink-0">
                             <div className={`w-14 h-14 rounded-full flex items-center justify-center font-serif text-xl ${isUnread ? 'bg-[#591C27] text-[#F4F1EB] shadow-inner' : isBlocked ? 'bg-[#2C2A25] text-white' : 'bg-[#2C2A25]/10 text-[#2C2A25]'}`}>
                               {initials}
@@ -252,7 +253,6 @@ export default function CalendarPage() {
                             {isUnread && <div className="absolute top-0 right-0 w-4 h-4 bg-[#591C27] border-2 border-white rounded-full animate-pulse"></div>}
                           </div>
 
-                          {/* Content */}
                           <div className="flex-1 min-w-0 pt-1">
                             <div className="flex justify-between items-baseline mb-1">
                               <h4 className={`font-sans text-base truncate ${isUnread ? 'font-bold text-[#2C2A25]' : isBlocked ? 'font-medium text-[#2C2A25]/70' : 'font-medium text-[#2C2A25]/80'}`}>
@@ -280,7 +280,7 @@ export default function CalendarPage() {
         )}
       </div>
 
-      {/* ============================== BLOCK DATES MODAL ============================== */}
+      {/* BLOCK DATES MODAL */}
       {isBlockModalOpen && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 sm:p-6 bg-[#1A1817]/80 backdrop-blur-sm animate-fade-in">
           <div className="bg-[#F4F1EB] w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
@@ -348,7 +348,7 @@ export default function CalendarPage() {
         </div>
       )}
 
-      {/* ============================== MANAGE MODAL ============================== */}
+      {/* MANAGE MODAL */}
       {selectedBooking && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-[#1A1817]/80 backdrop-blur-sm animate-fade-in">
           <div className="bg-[#F4F1EB] w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col">
@@ -439,11 +439,9 @@ export default function CalendarPage() {
                 )}
               </div>
             </div>
-
           </div>
         </div>
       )}
-
     </main>
   );
 }
