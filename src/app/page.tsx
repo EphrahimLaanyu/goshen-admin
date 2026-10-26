@@ -40,19 +40,13 @@ export default function AdminDashboard() {
                 <polyline points="22,6 12,13 2,6"></polyline>
               </svg>
               
-              {/* Notification Badge with Ping Effect */}
-              <div className="absolute -top-2 -right-3">
-                <span className="absolute inline-flex h-full w-full rounded-full bg-[#591C27] opacity-75 animate-ping"></span>
-                <span className="relative flex h-6 w-6 items-center justify-center rounded-full bg-[#591C27] text-[#F4F1EB] text-[10px] font-bold shadow-lg border border-[#2C2A25]">
-                  3
-                </span>
-              </div>
+
             </div>
             <h2 className="font-sans text-sm tracking-[0.2em] uppercase font-bold text-[#F4F1EB] mb-3">
               Inbox
             </h2>
             <p className="font-serif text-sm italic text-[#C5A059] font-bold text-center">
-              3 New Inquiries
+              Inquiries
             </p>
           </Link>
 
